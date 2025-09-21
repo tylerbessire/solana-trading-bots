@@ -1,0 +1,145 @@
+Transaction API Docs
+To get a transaction for signing and sending with a custom RPC, send a POST request to
+
+https://pumpportal.fun/api/trade-local
+
+Your request body must contain the following options:
+
+publicKey: Your wallet public key
+action: "buy" or "sell"
+mint: The contract address of the token you want to trade (this is the text after the '/' in the pump.fun url for the token.)
+amount: The amount of SOL or tokens to trade. If selling, amount can be a percentage of tokens in your wallet (ex. amount: "100%")
+denominatedInSol: "true" if amount is SOL, "false" if amount is tokens
+slippage: The percent slippage allowed
+priorityFee: Amount to use as priority fee
+pool: (optional) Currently 'pump' and 'raydium' are supported options. Default is 'pump'.
+If your parameters are valid, you will receive a serialized transaction in response. See the examples below for how to send this transaction with Python (Solders) or JavaScript (Web3.js).
+
+Examples
+Python
+JavaScript
+import requests
+from solders.transaction import VersionedTransaction
+from solders.keypair import Keypair
+from solders.commitment_config import CommitmentLevel
+from solders.rpc.requests import SendVersionedTransaction
+from solders.rpc.config import RpcSendTransactionConfig
+
+response = requests.post(url="https://pumpportal.fun/api/trade-local", data={
+    "publicKey": "Your public key here",
+    "action": "buy",             # "buy" or "sell"
+    "mint": "token CA here",     # contract address of the token you want to trade
+    "amount": 100000,            # amount of SOL or tokens to trade
+    "denominatedInSol": "false", # "true" if amount is amount of SOL, "false" if amount is number of tokens
+    "slippage": 10,              # percent slippage allowed
+    "priorityFee": 0.005,        # amount to use as priority fee
+    "pool": "pump"               # exchange to trade on. "pump" or "raydium"
+})
+
+keypair = Keypair.from_base58_string("Your base 58 private key here")
+tx = VersionedTransaction(VersionedTransaction.from_bytes(response.content).message, [keypair])
+
+commitment = CommitmentLevel.Confirmed
+config = RpcSendTransactionConfig(preflight_commitment=commitment)
+txPayload = SendVersionedTransaction(tx, config)
+
+response = requests.post(
+    url="Your RPC Endpoint here - Eg: https://api.mainnet-beta.solana.com/",
+    headers={"Content-Type": "application/json"},
+    data=SendVersionedTransaction(tx, config).to_json()
+)
+txSignature = response.json()['result']
+print(f'Transaction: https://solscan.io/tx/{txSignature}')
+
+
+
+
+
+Real-time Updates
+Stream real-time trading and token creation data by connecting to the PumpPortal Websocket at wss://pumpportal.fun/api/data.
+
+Once you connect, you can subscribe to different data streams. The following methods are available:
+
+subscribeNewToken For token creation events.
+
+subscribeTokenTrade For all trades made on specific token(s).
+
+subscribeAccountTrade For all trades made by specific account(s).
+
+PLEASE ONLY USE ONE WEBSOCKET CONNECTION AT A TIME:
+You should NOT open a new Websocket connection for every token or account you subscribe to. Instead, you should send any new subscribe messages to the same connection. Clients that repeatedly attempt to open many websocket connections at once may be blacklisted. If this happens you must reach out in Telegram so we can remove the ban.
+
+Examples:
+Python
+JavaScript
+import asyncio
+import websockets
+import json
+
+async def subscribe():
+uri = "wss://pumpportal.fun/api/data"
+async with websockets.connect(uri) as websocket:
+    
+    # Subscribing to token creation events
+    payload = {
+        "method": "subscribeNewToken",
+    }
+    await websocket.send(json.dumps(payload))
+
+    # Subscribing to trades made by accounts
+    payload = {
+        "method": "subscribeAccountTrade",
+        "keys": ["AArPXm8JatJiuyEffuC1un2Sc835SULa4uQqDcaGpAjV"]  # array of accounts to watch
+    }
+    await websocket.send(json.dumps(payload))
+
+    # Subscribing to trades on tokens
+    payload = {
+        "method": "subscribeTokenTrade",
+        "keys": ["91WNez8D22NwBssQbkzjy4s2ipFrzpmn5hfvWVe2aY5p"]  # array of token CAs to watch
+    }
+    await websocket.send(json.dumps(payload))
+    
+    async for message in websocket:
+        print(json.loads(message))
+
+# Run the subscribe function
+asyncio.get_event_loop().run_until_complete(subscribe())
+
+
+
+You can also unsubscribe from any data stream in the same way, using the following methods:
+
+unsubscribeNewToken
+
+unsubscribeTokenTrade
+
+unsubscribeAccountTrade
+
+Python
+JavaScript
+import asyncio
+import websockets
+import json
+
+async def subscribe():
+uri = "wss://pumpportal.fun/api/data"
+async with websockets.connect(uri) as websocket:
+    
+    # Subscribing to token creation events
+    payload = {
+        "method": "subscribeNewToken",
+    }
+    await websocket.send(json.dumps(payload))
+    
+    # Unsubscribing from new token events
+    payload = {
+        "method": "unsubscribeNewToken",
+    }
+    await websocket.send(json.dumps(payload))
+    
+    async for message in websocket:
+        print(json.loads(message))
+
+# Run the subscribe function
+asyncio.get_event_loop().run_until_complete(subscribe())

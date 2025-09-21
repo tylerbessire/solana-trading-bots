@@ -1,0 +1,7 @@
+Files to Review and Update:
+1. ~/attachments/optimized_rent_spot_bot.py - Update trade size to 0.01 SOL and fees to 0.001
+2. ~/attachments/trade_tracker.py - Verify fee calculations
+3. ~/attachments/web.py - Check for any trade size references
+4. ~/attachments/optimized_websocket_client.py - Review message handling for trades
+5. ~/attachments/main.py - Update any configuration defaults
+6. ~/attachments/dashboard.py - Update UI parameters and fee display

@@ -1,0 +1,9 @@
+websockets==11.0.3
+python-dotenv==1.0.0
+solders==0.18.0
+solana==0.30.2
+asyncio==3.4.3
+aiohttp==3.9.1
+python-binance==1.0.19
+base58==2.1.1
+streamlit==1.31.0

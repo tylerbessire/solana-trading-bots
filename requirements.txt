@@ -1,0 +1,51 @@
+# Core Dependencies
+asyncio
+websockets>=11.0
+solana-py>=0.30.0
+spl-token>=0.2.0
+anchor-py>=0.18.0
+
+# Trading and Market Data
+requests>=2.31.0
+aiohttp>=3.8.0
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Logging and Monitoring
+loguru>=0.7.0
+prometheus-client>=0.17.0
+
+# Crypto Libraries
+base58>=2.1.1
+cryptography>=41.0.0
+pysecp256k1>=0.17.0
+
+# Web Interface (Optional)
+fastapi>=0.100.0
+uvicorn>=0.23.0
+streamlit>=1.25.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+
+# Development Tools
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Jupyter for Analysis (Optional)
+jupyter>=1.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Additional Utilities
+click>=8.1.0
+rich>=13.5.0
+python-telegram-bot>=20.0 # For notifications
