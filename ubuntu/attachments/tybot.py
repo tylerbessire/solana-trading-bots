@@ -154,7 +154,7 @@ async def websocket_handler():
                 logger.debug("Subscribed to new token events")
 
                 # Subscribe to trades made by a specific account (replace with actual account keys if needed)
-                account_keys = ["AArPXm8JatJiuyEffuC1un2Sc835SULa4uQqDcaGpAjV"]
+                account_keys = ["YOUR_ACCOUNT_ADDRESS_HERE"]
                 await websocket.send(
                     json.dumps({
                         "method": "subscribeAccountTrade",
@@ -164,7 +164,7 @@ async def websocket_handler():
                     f"Subscribed to trades by accounts: {account_keys}")
 
                 # Subscribe to trades on specific tokens (replace with actual token CAs if needed)
-                token_keys = ["91WNez8D22NwBssQbkzjy4s2ipFrzpmn5hfvWVe2aY5p"]
+                token_keys = ["YOUR_TOKEN_ADDRESS_HERE"]
                 await websocket.send(
                     json.dumps({
                         "method": "subscribeTokenTrade",

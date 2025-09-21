@@ -15,7 +15,7 @@ async with websockets.connect(uri) as websocket:
     # Subscribing to trades made by accounts
     payload = {
         "method": "subscribeAccountTrade",
-        "keys": ["AArPXm8JatJiuyEffuC1un2Sc835SULa4uQqDcaGpAjV"]  # array of accounts to watch
+        "keys": ["YOUR_ACCOUNT_ADDRESS_HERE"]  # array of accounts to watch
     }
     await websocket.send(json.dumps(payload))
 
